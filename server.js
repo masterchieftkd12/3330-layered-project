@@ -1,13 +1,14 @@
 import express from "express";
-import { getTasks, postTask } from "./controllers/tasksController.js";
+import tasksRouter from "./routes/tasks.js";
 
 const app = express();
 const port = 3000;
 
 app.use(express.json());
 
-app.get("/api/tasks", getTasks);
-app.post("/api/tasks", postTask);
+// Mount the tasks router at /api
+// All task routes are now handled in routes/tasks.js
+app.use("/api", tasksRouter);
 
 const errorHandler = (err, req, res, next) => {
     console.error(err);
