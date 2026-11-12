@@ -1,5 +1,5 @@
 import express from "express";
-import { findAll, nextId, insert } from "./data/tasks.js";
+import { getAllTasks, createTask } from "./services/tasksService.js";
 
 const app = express();
 const port = 3000;
@@ -10,7 +10,7 @@ app.get("/api/tasks", (req, res, next) => {
     try {
         res.status(200).json({
             success: true,
-            data: findAll()
+            data: getAllTasks()
         });
     } catch (error) {
         next(error);
@@ -19,20 +19,7 @@ app.get("/api/tasks", (req, res, next) => {
 
 app.post("/api/tasks", (req, res, next) => {
     try {
-        const { title } = req.body;
-
-        if (typeof title !== "string" || title.trim() === "") {
-            const error = new Error("Title is required.");
-            error.status = 400;
-            throw error;
-        }
-
-        const newTask = {
-            id: nextId(),
-            title: title.trim(),
-            completed: false
-        };
-        insert(newTask);
+        const newTask = createTask(req.body.title);
 
         res.status(201).json({
             success: true,
