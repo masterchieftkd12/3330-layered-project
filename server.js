@@ -1,34 +1,13 @@
 import express from "express";
-import { getAllTasks, createTask } from "./services/tasksService.js";
+import { getTasks, postTask } from "./controllers/tasksController.js";
 
 const app = express();
 const port = 3000;
 
 app.use(express.json());
 
-app.get("/api/tasks", (req, res, next) => {
-    try {
-        res.status(200).json({
-            success: true,
-            data: getAllTasks()
-        });
-    } catch (error) {
-        next(error);
-    }
-});
-
-app.post("/api/tasks", (req, res, next) => {
-    try {
-        const newTask = createTask(req.body.title);
-
-        res.status(201).json({
-            success: true,
-            data: newTask
-        });
-    } catch (error) {
-        next(error);
-    }
-});
+app.get("/api/tasks", getTasks);
+app.post("/api/tasks", postTask);
 
 const errorHandler = (err, req, res, next) => {
     console.error(err);
