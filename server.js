@@ -1,13 +1,8 @@
 import express from "express";
+import { findAll, nextId, insert } from "./data/tasks.js";
 
 const app = express();
 const port = 3000;
-
-const db = [
-    { id: 1, title: "Take a shower", completed: false },
-    { id: 2, title: "Get wingstop for dinner", completed: false },
-    { id: 3, title: "Work on the project for 3330", completed: true },
-];
 
 app.use(express.json());
 
@@ -15,7 +10,7 @@ app.get("/api/tasks", (req, res, next) => {
     try {
         res.status(200).json({
             success: true,
-            data: db
+            data: findAll()
         });
     } catch (error) {
         next(error);
@@ -33,11 +28,11 @@ app.post("/api/tasks", (req, res, next) => {
         }
 
         const newTask = {
-            id: db.length > 0 ? Math.max(...db.map((task) => task.id)) + 1 : 1,
+            id: nextId(),
             title: title.trim(),
             completed: false
         };
-        db.push(newTask);
+        insert(newTask);
 
         res.status(201).json({
             success: true,
